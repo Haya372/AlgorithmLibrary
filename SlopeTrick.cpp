@@ -14,28 +14,30 @@ class SlopeTrick{
     v = 0;
   }
   // 全体に傾きが正の部分を加算
-  // |x - a| + b (x >= a)
-  void pushL(int a, int b){
-    v += b;
+  // |x - a| (x >= a)
+  void pushL(int a){
     if(L.size() > 0) v += max(0, L.top() - a);
     L.push(a);
     int l0 = L.top(); L.pop();
     R.push(l0);
   }
   // 全体に傾きが負の部分を加算
-  // |x - a| + b (x < a)
-  void pushR(int a, int b){
-    v += b;
+  // |x - a| (x < a)
+  void pushR(int a){
     if(R.size() > 0) v += max(0, a - R.top());
     R.push(a);
     int r0 = R.top(); R.pop();
     L.push(r0);
   }
+  // 定数関数を加算
+  void add(int b){
+    v += b;
+  }
   // 全体に|x - a| + b を加算
   void push(int a, int b){
-    pushL(a, b);
-    pushR(a, b);
-    v -= b; // 足しすぎた分を引く
+    pushL(a);
+    pushR(a);
+    add(b);
   }
   // 最小値をとるxを求める
   int get_minX(){
