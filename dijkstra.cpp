@@ -11,6 +11,41 @@ struct edge {
     int cost;
 };
 
+class Dijkstra {
+  int n;
+  vector<vector<P>> G;
+  public:
+  Dijkstra(int n_) {
+    n = n_;
+    G.resize(n_);
+  }
+
+  void add_edge(int from, int to, int cost){
+    G[from].push_back(P(to, cost));
+  }
+
+  vector<int> calc(int s){
+    priority_queue<P, vector<P>, greater<P>> que;
+    vector<int> d(n, INF);
+    d[s] = 0;
+    que.push(P(0, s));
+    vector<bool>used(n, false);
+    while(!que.empty()){
+      P p = que.top(); que.pop();
+      int v = p.second;
+      if(d[v] < p.first)continue;
+      for(int i = 0; i < G[v].size(); i++){
+        P e = G[v][i];
+        if(d[e.first] > d[v] + e.second){
+          d[e.first] = d[v] + e.second;
+          que.push(P(d[e.first], e.first));
+        }
+      }
+    }
+    return d;
+  }
+};
+
 int main(){
     int n, m;
     cin >> n >> m;
