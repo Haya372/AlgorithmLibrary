@@ -5,6 +5,38 @@ typedef long long ll;
 
 const ll mod = 1e9 + 7;
 
+
+vector<ll> kaizyou;
+
+void init(){
+  kaizyou[0] = 1;
+  for(ll i = 1; i < kaizyou.size(); i++){
+    kaizyou[i] = kaizyou[i - 1] * i % mod;
+  }
+}
+
+ll mod_pow(ll x, ll n){
+  ll res = 1;
+  while(n > 0){
+    if(n & 1) {
+      res *= x;
+      res %= mod;
+    }
+    x *= x;
+    x %= mod;
+    n >>= 1;
+  }
+  return res;
+}
+
+ll nCk(ll n, ll k){
+  if(n < k) return 0;
+  ll res = kaizyou[n] * mod_pow(kaizyou[n - k], mod - 2) % mod;
+  res *= mod_pow(kaizyou[k], mod - 2);
+  res %= mod;
+  return res;
+}
+
 class Comb {
   vector<ll> kaizyou;
   Comb(int n_) {
