@@ -63,7 +63,7 @@ struct UnionFind {
     int ry = root(y);
     return rx == ry;
   }
-  int size(int x){
+  int get_size(int x){
     return size[root(x)];
   }
 };
