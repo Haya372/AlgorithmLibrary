@@ -7,52 +7,52 @@ typedef pair<int, int> P;
   * ノードaとbの共通祖先(LCA)とその深さを高速に求める
 */
 struct RMQ_Euler_Tour{
-    private:
-    vector<P> dat;
-    P INF;
-    int n;
-    P eval(P a, P b){
-      if(a.second < b.second) return a;
-      return b;
-    }
-    //////
-    /*
-    節点kと範囲[l, r)について
-    1. [l, r)と[a, b)の共通部分がなければINFを返す
-    2. [l, r)が[a, b)に完全に含まれていればdat[k]を返す
-    3. 区間[l, r)を半分に分けて再帰して最小値を求めそのうちの小さい方の値を返す
-    */
-    //////
-    P subQuery(int a, int b, int k, int l, int r){
-        if(r <= a || b <= l){ return INF; }  // 1
+  private:
+  vector<P> dat;
+  P INF;
+  int n;
+  P eval(P a, P b){
+    if(a.second < b.second) return a;
+    return b;
+  }
+  //////
+  /*
+  節点kと範囲[l, r)について
+  1. [l, r)と[a, b)の共通部分がなければINFを返す
+  2. [l, r)が[a, b)に完全に含まれていればdat[k]を返す
+  3. 区間[l, r)を半分に分けて再帰して最小値を求めそのうちの小さい方の値を返す
+  */
+  //////
+  P subQuery(int a, int b, int k, int l, int r){
+    if(r <= a || b <= l){ return INF; }  // 1
 
-        if(a <= l && r <= b){ return dat[k]; }  // 2
-        else{
-            P vl = subQuery(a, b, k * 2 + 1, l, (l + r) / 2);
-            P vr = subQuery(a, b, k * 2 + 2, (l + r) / 2, r);
-            return eval(vl, vr); // 3
-        }
+    if(a <= l && r <= b){ return dat[k]; }  // 2
+    else{
+      P vl = subQuery(a, b, k * 2 + 1, l, (l + r) / 2);
+      P vr = subQuery(a, b, k * 2 + 2, (l + r) / 2, r);
+      return eval(vl, vr); // 3
     }
-    public:
-    void init(int n_){
-        n = 1;
-        while(n < n_) n *= 2;
-        INF = make_pair(-1, numeric_limits<int>::max());
-        dat = vector<P>(2 * n - 1, INF);
+  }
+  public:
+  void init(int n_){
+    n = 1;
+    while(n < n_) n *= 2;
+    INF = make_pair(-1, numeric_limits<int>::max());
+    dat = vector<P>(2 * n - 1, INF);
+  }
+  //k番目の値を更新
+  void update(int k, P a){
+    k += n - 1;
+    dat[k] = a;
+    while(k > 0){
+      k = (k - 1) / 2;
+      dat[k] = eval(dat[k * 2 + 1], dat[k * 2 + 2]);
     }
-    //k番目の値を更新
-    void update(int k, P a){
-        k += n - 1;
-        dat[k] = a;
-        while(k > 0){
-            k = (k - 1) / 2;
-            dat[k] = eval(dat[k * 2 + 1], dat[k * 2 + 2]);
-        }
-    }
-    //[a, b)の最小値を求める
-    P query(int a, int b){
-        return subQuery(a, b, 0, 0, n);
-    }
+  }
+  //[a, b)の最小値を求める
+  P query(int a, int b){
+    return subQuery(a, b, 0, 0, n);
+  }
 };
 
 class Euler_tour
