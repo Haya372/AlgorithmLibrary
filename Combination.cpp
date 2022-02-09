@@ -6,14 +6,7 @@ typedef long long ll;
 const ll mod = 1e9 + 7;
 
 
-vector<ll> kaizyou;
-
-void init(){
-  kaizyou[0] = 1;
-  for(ll i = 1; i < kaizyou.size(); i++){
-    kaizyou[i] = kaizyou[i - 1] * i % mod;
-  }
-}
+vector<ll> kaizyou, inv;
 
 ll mod_pow(ll x, ll n){
   ll res = 1;
@@ -29,10 +22,21 @@ ll mod_pow(ll x, ll n){
   return res;
 }
 
+void init(int n){
+  kaizyou.resize(n);
+  inv.resize(n);
+  kaizyou[0] = 1;
+  inv[0] = 1;
+  for(ll i = 1; i < kaizyou.size(); i++){
+    kaizyou[i] = kaizyou[i - 1] * i % mod;
+    inv[i] = mod_pow(kaizyou[i], mod - 2);
+  }
+}
+
 ll nCk(ll n, ll k){
   if(n < k) return 0;
-  ll res = kaizyou[n] * mod_pow(kaizyou[n - k], mod - 2) % mod;
-  res *= mod_pow(kaizyou[k], mod - 2);
+  ll res = kaizyou[n] * inv[n - k] % mod;
+  res *= inv[k];
   res %= mod;
   return res;
 }
