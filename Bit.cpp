@@ -2,6 +2,7 @@
 
 using namespace std;
 
+// [1:n]
 template<class T>
 class BIT{
   private:
